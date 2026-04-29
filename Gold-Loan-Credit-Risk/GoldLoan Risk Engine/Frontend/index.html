@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoldLoan™ - Credit Risk Engine</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-icon">🪙</span> GoldLoan
+        </div>
+        <div class="nav-links">
+            <a href="#" class="active">Dashboard</a>
+            <a href="#">Applications</a>
+            <a href="#">Analytics</a>
+            <a href="#">Reports</a>
+        </div>
+        <div class="user-profile">
+            <div class="avatar">A</div>
+            <div class="user-info">
+                <span class="user-name">User Profile</span>
+                <span class="user-role"> Admin </span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="card">
+            <!-- Left Side: Data Entry -->
+            <div class="section left-section">
+                <h2>APPLICANT DATA ENTRY</h2>
+
+                <form id="loanForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Age</label>
+                            <div class="input-group">
+                                <span class="prefix">Number</span>
+                                <input type="number" id="age" placeholder="eg. 38" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Monthly Income</label>
+                            <div class="input-group">
+                                <span class="prefix">INR</span>
+                                <input type="number" id="monthly_income" placeholder="eg. 185000" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Gold Weight (grams)</label>
+                            <div class="input-group">
+                                <span class="prefix">Weight</span>
+                                <input type="number" step="0.1" id="gold_weight_g" placeholder="eg. 45.5" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Gold_Purity <span class="hint">Dropdown</span></label>
+                            <select id="gold_purity" required>
+                                <option value="" disabled selected>Select...</option>
+                                <option value="24">24K (99.9%)</option>
+                                <option value="22">22K (91.6%)</option>
+                                <option value="20">20K (83.3%)</option>
+                                <option value="18">18K (75.0%)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Market Value</label>
+                            <div class="input-group">
+                                <span class="prefix">₹</span>
+                                <input type="number" id="market_value_inr" placeholder="eg. 1680000" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Loan Amount</label>
+                            <div class="input-group">
+                                <span class="prefix">₹</span>
+                                <input type="number" id="loan_amount_inr" placeholder="eg. 1150000" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tenure_Months</label>
+                            <select id="tenure_months" required>
+                                <option value="" disabled selected>Select...</option>
+                                <option value="3">3 Months</option>
+                                <option value="6">6 Months</option>
+                                <option value="9">9 Months</option>
+                                <option value="12">12 Months</option>
+                                <option value="18">18 Months</option>
+                                <option value="24">24 Months</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Past_Defaults</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="past_defaults" value="1"> Yes</label>
+                                <label><input type="radio" name="past_defaults" value="0" checked> No</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Occupation</label>
+                            <select id="occupation" required>
+                                <option value="" disabled selected>Select...</option>
+                                <option value="Professional">Professional</option>
+                                <option value="Salaried">Salaried</option>
+                                <option value="Small Business">Small Business</option>
+                                <option value="Farmer">Farmer</option>
+                                <option value="Daily Wage">Daily Wage</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">ANALYZE CREDIT RISK</button>
+                </form>
+            </div>
+
+            <!-- Vertical Divider -->
+            <div class="divider"></div>
+
+            <!-- Right Side: Assessment -->
+            <div class="section right-section">
+                <h2>CREDIT RISK ASSESSMENT</h2>
+
+                <div class="gauge-container">
+                    <div class="gauge">
+                        <svg viewBox="0 0 200 120" class="gauge-svg">
+                            <!-- Background segmented track -->
+                            <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#00a651" stroke-width="28"
+                                stroke-dasharray="48 204" stroke-dashoffset="0" />
+                            <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#fdee21" stroke-width="28"
+                                stroke-dasharray="48 204" stroke-dashoffset="-50.5" />
+                            <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#f39200" stroke-width="28"
+                                stroke-dasharray="48 204" stroke-dashoffset="-101" />
+                            <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#ed1c24" stroke-width="28"
+                                stroke-dasharray="48 204" stroke-dashoffset="-151.5" />
+                            <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#b30000" stroke-width="28"
+                                stroke-dasharray="48 204" stroke-dashoffset="-202" />
+
+                            <!-- Needle -->
+                            <g id="gauge-needle"
+                                style="transform-origin: 100px 100px; transform: rotate(0deg); transition: transform 0.5s ease-out;">
+                                <path d="M 96 100 L 100 25 L 104 100 Z" fill="#3a3e45" />
+                                <circle cx="100" cy="100" r="12" fill="#3a3e45" />
+                                <circle cx="100" cy="100" r="6" fill="#ffffff" />
+                            </g>
+
+                            <!-- Clean Value Labels -->
+                            <text x="25" y="115" class="gauge-val" text-anchor="middle"
+                                style="font-size: 10px; opacity: 0.5;">100</text>
+                            <text x="175" y="115" class="gauge-val" text-anchor="middle"
+                                style="font-size: 10px; opacity: 0.5;">0</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="meta-info">
+                    <span id="analysis-id">Analysis ID: --</span>
+                    <span id="timestamp">Timestamp: --</span>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-title">Credit Risk(%)</div>
+                        <div class="metric-value" id="prob-value"></div>
+                        <div class="metric-status" id="prob-status"></div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-title">LTVRatio(%)</div>
+                        <div class="metric-value" id="ltv-value"></div>
+                        <div class="metric-status" id="ltv-status"></div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-title">Debt to Income (%)</div>
+                        <div class="metric-value" id="dti-value"></div>
+                        <div class="metric-status" id="dti-status"></div>
+                    </div>
+                </div>
+
+                <!-- Recommendation Card -->
+                <div class="recommendation-card" id="recommendation-card">
+                    <div class="rec-content">
+                        <div class="rec-title">Final Recommendation</div>
+                        <div class="rec-status" id="rec-status"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
