@@ -13,11 +13,9 @@ Instead of just predicting *who* will leave, this project focuses on **Explainab
 To ensure the model learns from behavior rather than "cheating," rigorous data preparation was applied:
 
 ### 1. Feature Engineering
-*   **Snapshot Date:** Set to `January 1, 2024` to ensure reproducible historical calculations.
 *   **Tenure:** Calculated as days between Hire Date and the Snapshot Date (or Termination Date).
 *   **Age_At_Review:** Calculated to understand the lifecycle stage of the employee during their last performance cycle.
-*   **Century Trap Fix:** Applied logic to prevent negative ages caused by 2-digit birth year parsing errors.
-
+  
 ### 2. Data Leakage Prevention (Pruning)
 The following features were strictly dropped before training to prevent Data Leakage (where the model knows the future):
 *    `DateofTermination`
