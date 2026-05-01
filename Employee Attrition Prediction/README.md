@@ -1,108 +1,46 @@
-HR Attrition Prediction Pipeline
-Overview
+#  HR Attrition Prediction Pipeline
 
-Employee turnover is a significant cost driver for organizations. This project applies Data Science and Machine Learning techniques to predict employee attrition using HRDataset.csv.
+##  Project Overview
+Employee turnover is expensive. This project applies high-level Data Science techniques to `HRDataset.csv` to predict employee attrition (Churn/Termination) before it happens. 
 
-The focus is not only on prediction but also on Explainable AI, identifying the key factors influencing employee churn. This allows HR teams to take proactive, data-driven retention actions.
+Instead of just predicting *who* will leave, this project focuses on **Explainable AI**, identifying the *mathematical drivers* (Feature Importance) behind why employees quit, allowing HR to make data-driven retention strategies.
 
-Business Objective
-Target Variable: Termd
-1 → Terminated
-0 → Active
-Primary Metric: Recall (Class 1)
+##  Business Objective
+*   **Target Variable:** `Termd` (1 = Terminated, 0 = Active)
+*   **Primary Metric:** **Recall (Class 1)**. In HR analytics, it is better to falsely flag an employee as a flight risk (False Positive) than to completely miss an employee who is about to quit (False Negative).
 
-Rationale: Missing an employee who is likely to leave (False Negative) is more costly than incorrectly flagging a stable employee (False Positive).
+##  Data Engineering & Preprocessing
+To ensure the model learns from behavior rather than "cheating," rigorous data preparation was applied:
 
-Dataset
+### 1. Feature Engineering
+*   **Snapshot Date:** Set to `January 1, 2024` to ensure reproducible historical calculations.
+*   **Tenure:** Calculated as days between Hire Date and the Snapshot Date (or Termination Date).
+*   **Age_At_Review:** Calculated to understand the lifecycle stage of the employee during their last performance cycle.
+*   **Century Trap Fix:** Applied logic to prevent negative ages caused by 2-digit birth year parsing errors.
 
-The dataset contains employee-level HR data, including:
+### 2. Data Leakage Prevention (Pruning)
+The following features were strictly dropped before training to prevent Data Leakage (where the model knows the future):
+*    `DateofTermination`
+*    `EmploymentStatus`
+*    `DateofHire`
+*    `ManagerName` (Used `ManagerID` instead)
 
-Demographics
-Job-related attributes
-Performance metrics
-Behavioral indicators
-Data Engineering and Preprocessing
-Feature Engineering
-Snapshot Date: January 1, 2024
-Tenure: Days between Hire Date and Snapshot (or Termination Date)
-Age_At_Review: Age at last performance review
-Century Fix: Corrected two-digit year parsing issues to avoid invalid ages
-Data Leakage Prevention
+### 3. The Final Feature Set
+*   **Numerical:** `Salary`, `EngagementSurvey`, `EmpSatisfaction`, `SpecialProjectsCount`, `DaysLateLast30`, `Absences`, `Age_At_Review`, `Tenure`.
+*   **Nominal:** `Position`, `Sex`, `MaritalDesc`, `Department`, `ManagerID`.
+*   **Ordinal:** `PerformanceScore` (Mapped: PIP < Needs Improvement < Fully Meets < Exceeds).
 
-The following columns were removed before training to avoid leakage:
+##  Exploratory Data Analysis (EDA)
+A hypothesis-driven EDA was conducted focusing on the target variable. Visualizations include:
+*   **Target-Focused Correlation Heatmap:** Isolated to see which features directly correlate with attrition.
+*   **Lifecycle Analysis:** KDE plots tracking Attrition spikes against `Tenure`.
+*   **Managerial Impact:** Churn-rate analysis grouped by Top 10 Managers.
+*   **Behavioral Red Flags:** Scatter plots tracking `Absences` vs `DaysLateLast30`.
 
-DateofTermination
-EmploymentStatus
-DateofHire
-ManagerName
+##  Machine Learning Pipeline (The "Bake-Off")
+Built a robust `scikit-learn` Pipeline using `ColumnTransformer` (StandardScaler, OneHotEncoder, OrdinalEncoder) to handle preprocessing dynamically. Addressed class imbalance (~33% attrition) using `class_weight='balanced'`.
 
-ManagerID was retained as a structured proxy for managerial influence.
+Two models were tested head-to-head:
+1.  **Logistic Regression (Baseline):** Used for its high explainability and linear coefficient transparency.
+2.  **Random Forest Classifier (Champion):** Built with 100 decision trees (`n_estimators=100`). Selected as the final model due to its ability to capture non-linear behavioral patterns and output clear **Feature Importances**.
 
-Final Feature Set
-Numerical Features
-Salary
-EngagementSurvey
-EmpSatisfaction
-SpecialProjectsCount
-DaysLateLast30
-Absences
-Age_At_Review
-Tenure
-Categorical Features
-
-Nominal:
-
-Position
-Sex
-MaritalDesc
-Department
-ManagerID
-
-Ordinal:
-
-PerformanceScore
-PIP < Needs Improvement < Fully Meets < Exceeds
-Exploratory Data Analysis
-
-EDA was conducted with a strong focus on attrition behavior:
-
-Correlation analysis targeting the attrition variable
-Tenure-based lifecycle analysis using density plots
-Manager-level churn comparisons
-Behavioral risk patterns (Absences vs Days Late)
-Machine Learning Pipeline
-
-A modular pipeline was built using scikit-learn:
-
-ColumnTransformer
-StandardScaler → Numerical features
-OneHotEncoder → Nominal features
-OrdinalEncoder → Ordinal features
-Class Imbalance Handling
-class_weight='balanced' (~33% attrition rate)
-Models Evaluated
-1. Logistic Regression (Baseline)
-High interpretability
-Transparent coefficients
-Serves as benchmark
-2. Random Forest Classifier (Final Model)
-100 decision trees (n_estimators=100)
-Captures non-linear relationships
-Provides feature importance for explainability
-Model Selection
-
-The Random Forest Classifier was selected due to:
-
-Better recall on attrition class
-Ability to model complex behavioral patterns
-Built-in feature importance for decision support
-Key Insights (Example Outputs)
-High absenteeism and frequent lateness are strong predictors of attrition
-Low engagement and satisfaction scores increase churn risk
-Certain managers show consistently higher attrition rates
-Early tenure phase shows higher exit probability
-Tech Stack
-Python
-Pandas, NumPy
-Matplotlib, Seaborn
-Scikit-learn
